@@ -340,7 +340,7 @@ class Rds(Leaf):
     def security_groups(self):
         return pyjq.all('.VpcSecurityGroups[].VpcSecurityGroupId', self._json_blob)
 
-    def __init__(self, parent, json_blob):
+    def __init__(self, parent, json_blob, prefix):
         self._type = "rds"
 
         # Check if this is a read-replicable
@@ -350,6 +350,10 @@ class Rds(Leaf):
         # I am making up this ARN, because RDS uses "arn:aws:rds:region:account-id:db:db-instance-name",
         # but that doesn't tell the subnet
         self._local_id = json_blob["DBInstanceIdentifier"]
+
+        if json_blob["DBInstanceIdentifier"].startswith(prefix):
+          self._local_id = prefix
+        
         self._arn = "arn:aws:rds:{}:{}:db-instance/{}/{}".format(
             parent.region.name,
             parent.account.local_id,
@@ -357,6 +361,10 @@ class Rds(Leaf):
             parent.local_id
         )
         self._name = truncate(json_blob["DBInstanceIdentifier"])
+        
+        if json_blob["DBInstanceIdentifier"].startswith(prefix):
+          self._name = prefix        
+        
         super(Rds, self).__init__(parent, json_blob)
 
 

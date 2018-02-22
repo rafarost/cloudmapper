@@ -246,7 +246,7 @@ def build_data_structure(account_data, config, outputfilter):
 
                     # Get RDS's
                     for rds_json in get_rds_instances(subnet):
-                        rds = Rds(subnet, rds_json)
+                        rds = Rds(subnet, rds_json, outputfilter["rds_prefix"])
                         if not outputfilter["read_replicas"] and rds.node_type == "rds_rr":
                             continue
                         subnet.addChild(rds)

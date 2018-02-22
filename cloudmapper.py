@@ -85,11 +85,14 @@ def run_prepare(arguments):
                         dest='azs', action='store_false')
     parser.add_argument("--collapse-by-tag", help="Collapse nodes with the same tag to a single node",
                         dest='collapse_by_tag', default=None, type=str)
+    parser.add_argument("--rds-prefix", help="Collapse rds nodes with the same prefix to a single node",
+                        dest='rds_prefix', default='', type=str)                        
 
     parser.set_defaults(internal_edges=True)
     parser.set_defaults(inter_rds_edges=False)
     parser.set_defaults(read_replicas=True)
     parser.set_defaults(azs=True)
+    parser.set_defaults(rds_prefix='')
 
     args = parser.parse_args(arguments)
 
@@ -103,6 +106,7 @@ def run_prepare(arguments):
     outputfilter["inter_rds_edges"] = args.inter_rds_edges
     outputfilter["azs"] = args.azs
     outputfilter["collapse_by_tag"] = args.collapse_by_tag
+    outputfilter["rds_prefix"] = args.rds_prefix
 
     # Read accounts file
     try:
